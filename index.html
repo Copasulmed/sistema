@@ -7,7 +7,7 @@
 <title>Copasulmed — Ficha do Paciente v2</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
   --green:#1a6b3a;--green-mid:#2d8a50;--green-light:#4caf72;--green-pale:#e8f5ee;
@@ -158,90 +158,20 @@ select.form-input{cursor:pointer;}
 @media print {
   body * { visibility: hidden; }
   #print-area, #print-area * { visibility: visible; }
-  #print-area {
-    position:fixed;inset:0;background:white;
-    padding:48px 56px 120px 56px;
-    font-family:'Lato',sans-serif;font-size:13px;color:#111;
-    display:flex;flex-direction:column;
-  }
-  /* ── CABEÇALHO ── */
-  .ph {
-    text-align:center;
-    border-bottom:1.5px solid #1a6b3a;
-    padding-bottom:18px;margin-bottom:24px;
-  }
-  .ph h1 {
-    font-family:'Playfair Display',Georgia,serif;
-    font-size:26px;font-weight:700;font-style:italic;
-    color:#1a2e23;margin-bottom:5px;letter-spacing:0.5px;
-  }
-  .ph .ph-crm {
-    font-family:'Lato',sans-serif;
-    font-size:12px;color:#555;margin:3px 0;letter-spacing:0.3px;
-  }
-  .ph .ph-esp {
-    font-family:'Playfair Display',Georgia,serif;
-    font-size:13px;font-style:italic;color:#3d5a47;margin:2px 0;
-  }
-  /* ── PACIENTE ── */
-  .pp {
-    background:#f7f9f8;border:1px solid #d4e3da;
-    border-radius:6px;padding:12px 16px;margin-bottom:22px;
-  }
-  .pp h3 { font-size:14px;font-weight:800;margin-bottom:3px;color:#1a2e23; }
-  .pp span { font-size:12px;color:#555; }
-  /* ── PRESCRIÇÃO ── */
-  .pm { flex:1; }
-  .pm-title {
-    font-size:11px;font-weight:700;letter-spacing:1.5px;
-    text-transform:uppercase;color:#1a6b3a;
-    margin-bottom:12px;padding-bottom:6px;
-    border-bottom:1px solid #d4e3da;
-  }
-  .pm-item {
-    display:flex;align-items:baseline;gap:0;
-    padding:10px 0;border-bottom:1px dashed #d4e3da;
-    font-size:13px;
-  }
-  .pm-num {
-    font-weight:700;color:#1a6b3a;
-    min-width:24px;font-size:13px;
-  }
-  .pm-med {
-    font-weight:700;color:#1a2e23;font-size:14px;
-  }
-  .pm-posologia {
-    color:#444;font-size:13px;margin-left:8px;
-  }
-  .pobs {
-    margin-top:14px;font-size:12px;color:#555;
-    font-style:italic;padding:10px 14px;
-    background:#f7f9f8;border-left:3px solid #1a6b3a;
-    border-radius:0 6px 6px 0;
-  }
-  /* ── ASSINATURA — fixada na base ── */
-  .psign {
-    position:fixed;bottom:80px;left:0;right:0;
-    text-align:center;
-  }
-  .psign .sl {
-    border-top:1px solid #333;width:240px;
-    margin:0 auto 7px;
-  }
-  .psign .ps-nome {
-    font-family:'Playfair Display',Georgia,serif;
-    font-size:13px;font-style:italic;color:#1a2e23;
-  }
-  .psign .ps-crm {
-    font-size:11px;color:#666;margin-top:2px;letter-spacing:0.3px;
-  }
-  /* ── RODAPÉ ── */
-  .pfoot {
-    position:fixed;bottom:32px;left:56px;right:56px;
-    border-top:1px solid #d4e3da;padding-top:8px;
-    font-size:10px;color:#888;
-    display:flex;justify-content:space-between;
-  }
+  #print-area { position:fixed;inset:0;background:white;padding:40px 48px;font-family:'Lato',sans-serif;font-size:13px;color:#000; }
+  .ph { text-align:center;border-bottom:2px solid #1a6b3a;padding-bottom:16px;margin-bottom:24px; }
+  .ph h1 { font-size:20px;font-weight:900;color:#1a6b3a;margin-bottom:4px; }
+  .ph p { font-size:12px;color:#444;margin:2px 0; }
+  .pp { background:#f7f9f8;border:1px solid #d4e3da;border-radius:8px;padding:12px 16px;margin-bottom:20px; }
+  .pp h3 { font-size:14px;font-weight:900;margin-bottom:4px; }
+  .pm table { width:100%;border-collapse:collapse;margin-top:8px; }
+  .pm th { background:#1a6b3a;color:white;padding:8px 12px;font-size:12px;text-align:left; }
+  .pm td { padding:8px 12px;border-bottom:1px solid #d4e3da;font-size:13px; }
+  .pm tr:nth-child(even) td { background:#f7f9f8; }
+  .pobs { margin-top:16px;font-size:13px; }
+  .psign { margin-top:48px;text-align:center; }
+  .psign .sl { border-top:1px solid #000;width:260px;margin:0 auto 6px; }
+  .pfoot { position:fixed;bottom:40px;left:48px;right:48px;border-top:1px solid #d4e3da;padding-top:12px;font-size:11px;color:#666;display:flex;justify-content:space-between; }
 }
 ::-webkit-scrollbar{width:6px;height:6px;}
 ::-webkit-scrollbar-track{background:var(--off-white);}
@@ -274,8 +204,6 @@ select.form-input{cursor:pointer;}
         </div>
         <div class="lc-form">
           <div class="lc-form-title">Acesso ao Sistema</div>
-          <input id="login-url" class="lc-input" type="url" placeholder="URL do Supabase">
-          <input id="login-key" class="lc-input" type="password" placeholder="Chave Anon / Publishable Key">
           <input id="login-email" class="lc-input" type="email" placeholder="E-mail" autocomplete="username">
           <input id="login-pass" class="lc-input" type="password" placeholder="Senha" autocomplete="current-password">
           <button class="lc-btn" onclick="doLogin()">Entrar no Sistema</button>
@@ -285,6 +213,8 @@ select.form-input{cursor:pointer;}
     </div>
   </div>
 </div>
+
+<script>document.addEventListener("keydown",e=>{if(e.key==="Enter"&&document.getElementById("screen-login").classList.contains("active"))doLogin();});</script>
 
 <!-- ════ APP ════ -->
 <div id="screen-app" class="screen">
@@ -650,27 +580,28 @@ function maskTel(el){let v=el.value.replace(/\D/g,'');if(v.length<=10)v=v.replac
 
 window.addEventListener('DOMContentLoaded',()=>{
   const cfg=JSON.parse(localStorage.getItem(LS)||'{}');
-  if(cfg.url)document.getElementById('login-url').value=cfg.url;
-  if(cfg.key)document.getElementById('login-key').value=cfg.key;
   if(cfg.email)document.getElementById('login-email').value=cfg.email;
   const z=document.getElementById('upload-zone-drop');
   if(z){z.addEventListener('dragover',e=>{e.preventDefault();z.style.borderColor='var(--green-mid)';});z.addEventListener('dragleave',()=>z.style.borderColor='');z.addEventListener('drop',e=>{e.preventDefault();z.style.borderColor='';uploadImagens(e.dataTransfer.files);});}
 });
 
+const _URL='https://vmfygvgjugyvqbnrelzh.supabase.co';
+const _ANON='sb_publishable_YaSoGdeayV1c7Mhn6hzBPA_kT06Osvn';
+const _SVC='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtZnlndmdqdWd5dnFibnJlbHpoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODg3NDA2MCwiZXhwIjoyMDk0NDUwMDYwfQ.BIUd3KapD_ynXPh7PZ2f8bj56OvjX79Fqs-xLiH22_Y';
+
 async function doLogin(){
-  const url=document.getElementById('login-url').value.trim();
-  const key=document.getElementById('login-key').value.trim();
   const email=document.getElementById('login-email').value.trim();
   const pass=document.getElementById('login-pass').value;
-  if(!url||!key||!email||!pass){showToast('Preencha todos os campos.','err');return;}
+  if(!email||!pass){showToast('Preencha e-mail e senha.','err');return;}
   showOverlay('Conectando…');
   try{
-    SB=supabase.createClient(url,key);
+    SB=supabase.createClient(_URL,_ANON);
     const{data,error}=await SB.auth.signInWithPassword({email,password:pass});
     if(error)throw error;
     SESSION_USER=data.user;
-    localStorage.setItem(LS,JSON.stringify({url,key,email}));
-    const{data:med}=await SB.from('medicos').select('*').eq('email',email).maybeSingle();
+    localStorage.setItem(LS,JSON.stringify({email}));
+    let MEDICO_TMP=null;try{const{data:mArr}=await SB.from('medicos').select('*').eq('email',email).limit(1);MEDICO_TMP=mArr&&mArr.length?mArr[0]:null;}catch(e){MEDICO_TMP=null;}
+    const med=MEDICO_TMP;
     MEDICO_LOGADO=med||null;
     document.getElementById('nav-avatar').textContent=(MEDICO_LOGADO?.nome||email)[0].toUpperCase();
     document.getElementById('nav-nome-med').textContent=MEDICO_LOGADO?.nome||email;
@@ -830,36 +761,14 @@ function imprimirReceita(){
   const r=REC_VER_DATA,p=CURRENT_PAC,med=MEDICO_LOGADO;
   let meds=[];try{meds=JSON.parse(r.medicamentos||'[]');}catch(e){}
   const pa=document.getElementById('print-area');
-  const crmTxt=med?.crm?`CRM: ${med.crm}`:(r.medico||'');
   pa.innerHTML=`
-    <div class="ph">
-      <h1>${med?.nome||r.medico||'Médico'}</h1>
-      ${med?.especialidade?`<div class="ph-esp">${med.especialidade}</div>`:''}
-      ${med?.crm?`<div class="ph-crm">CRM: ${med.crm}</div>`:''}
-    </div>
-    <div class="pp">
-      <h3>${p?.nome||'—'}</h3>
-      <span>${p?.data_nascimento?`Nasc.: ${fmtData(p.data_nascimento)} · ${calcIdade(p.data_nascimento)} anos`:''}${p?.cpf?' &nbsp;·&nbsp; CPF: '+p.cpf:''}</span>
-    </div>
-    <div class="pm">
-      <div class="pm-title">Prescrição — ${fmtData(r.data_receita)}</div>
-      ${meds.map((m,i)=>`
-        <div class="pm-item">
-          <span class="pm-num">${i+1}.</span>
-          <span class="pm-med">&nbsp;${m.nome}${m.dose?' '+m.dose:''}</span>
-          ${m.posologia?`<span class="pm-posologia">— ${m.posologia}</span>`:''}
-        </div>`).join('')}
-      ${r.observacoes?`<div class="pobs">${r.observacoes}</div>`:''}
-    </div>
-    <div class="psign">
-      <div class="sl"></div>
-      <div class="ps-nome">${med?.nome||r.medico||''}</div>
-      ${med?.crm?`<div class="ps-crm">CRM: ${med.crm}</div>`:''}
-    </div>
-    <div class="pfoot">
-      <span>${med?.endereco||''}</span>
-      <span>${med?.telefone||''}</span>
-    </div>`;
+    <div class="ph"><h1>${med?.nome||r.medico||'Médico'}</h1><p>${med?.crm||''}</p><p>${med?.especialidade||''}</p></div>
+    <div class="pp"><h3>Paciente: ${p?.nome||'—'}</h3><div style="font-size:12px;color:#444;margin-top:4px">${p?.data_nascimento?`Nasc.: ${fmtData(p.data_nascimento)} (${calcIdade(p.data_nascimento)} anos)&nbsp;&nbsp;`:''} ${p?.cpf?`CPF: ${p.cpf}`:''}</div></div>
+    <div class="pm"><p style="font-weight:700;font-size:13px;margin-bottom:8px">PRESCRIÇÃO — ${fmtData(r.data_receita)}</p>
+    <table><thead><tr><th>#</th><th>Medicamento</th><th>Dose</th><th>Posologia</th></tr></thead><tbody>${meds.map((m,i)=>`<tr><td>${i+1}</td><td>${m.nome}</td><td>${m.dose||'—'}</td><td>${m.posologia||'—'}</td></tr>`).join('')}</tbody></table>
+    ${r.observacoes?`<div class="pobs"><strong>Observações:</strong> ${r.observacoes}</div>`:''}</div>
+    <div class="psign"><div class="sl"></div><div style="font-size:12px">${med?.nome||r.medico||''}</div><div style="font-size:11px;color:#666">${med?.crm||''}</div></div>
+    <div class="pfoot"><span>${med?.endereco||''}</span><span>${med?.telefone||''}</span></div>`;
   pa.style.display='block';window.print();pa.style.display='none';
 }
 
@@ -921,7 +830,9 @@ async function salvarMedico(){
   if(!EDIT_MED_ID&&!pass){showToast('Senha é obrigatória para novo médico.','err');return;}
   showOverlay('Salvando médico…');
   try{
-    if(!EDIT_MED_ID&&pass){const cfg=JSON.parse(localStorage.getItem(LS)||'{}');const sbA=supabase.createClient(cfg.url,cfg.key);const{error:authErr}=await sbA.auth.signUp({email,password:pass});if(authErr&&!authErr.message.toLowerCase().includes('already'))throw authErr;}
+      const sbAdmin=supabase.createClient(_URL,_SVC);
+      const{data:authData,error:authErr}=await sbAdmin.auth.admin.createUser({email,password:pass,email_confirm:true});
+      if(authErr&&!authErr.message.toLowerCase().includes('already')&&!authErr.message.toLowerCase().includes('exists'))throw authErr;
     const payload={nome,crm,especialidade:document.getElementById('med-especialidade').value||null,endereco:document.getElementById('med-endereco').value||null,telefone:document.getElementById('med-tel').value||null,email};
     let res;if(EDIT_MED_ID)res=await SB.from('medicos').update(payload).eq('id',EDIT_MED_ID).select().single();else res=await SB.from('medicos').insert(payload).select().single();
     if(res.error)throw res.error;closeModal('modal-medico');showToast(EDIT_MED_ID?'Médico atualizado!':'Médico cadastrado!');await carregarMedicos();
