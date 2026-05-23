@@ -158,29 +158,15 @@ select.form-input{cursor:pointer;}
 @media print {
   body * { visibility:hidden; }
   #print-area, #print-area * { visibility:visible; }
-  #print-area {
-    position:fixed;inset:0;background:white;
-    padding:48px 56px 140px 56px;
-    font-family:'Lato',sans-serif;font-size:13px;color:#111;
-  }
+  #print-area { position:fixed;inset:0;background:white;padding:48px 56px 140px 56px;font-family:'Lato',sans-serif;font-size:13px;color:#111; }
   .ph { text-align:center;border-bottom:1.5px solid #2d2d2d;padding-bottom:16px;margin-bottom:22px; }
-  .ph-nome {
-    font-family:'Playfair Display',Georgia,'Times New Roman',serif;
-    font-size:24px;font-weight:700;font-style:italic;
-    color:#1a2e23;margin-bottom:4px;
-  }
-  .ph-esp {
-    font-family:'Playfair Display',Georgia,'Times New Roman',serif;
-    font-size:13px;font-style:italic;color:#444;margin:2px 0;
-  }
+  .ph-nome { font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-size:24px;font-weight:700;font-style:italic;color:#1a2e23;margin-bottom:4px; }
+  .ph-esp { font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-size:13px;font-style:italic;color:#444;margin:2px 0; }
   .ph-crm { font-size:11px;color:#666;margin:3px 0;letter-spacing:0.5px; }
   .pp { background:#f7f9f8;border:1px solid #d4e3da;border-radius:6px;padding:11px 15px;margin-bottom:22px; }
   .pp-nome { font-size:14px;font-weight:800;color:#1a2e23;margin-bottom:3px; }
   .pp-info { font-size:12px;color:#555; }
-  .pm-titulo {
-    font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-    color:#1a6b3a;margin-bottom:14px;padding-bottom:6px;border-bottom:1px solid #d4e3da;
-  }
+  .pm-titulo { font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#1a6b3a;margin-bottom:14px;padding-bottom:6px;border-bottom:1px solid #d4e3da; }
   .pm-item { padding:9px 0;border-bottom:1px dashed #ddd;font-size:13px;display:flex;align-items:baseline;gap:6px; }
   .pm-num { font-weight:700;color:#1a6b3a;min-width:20px; }
   .pm-med { font-weight:700;color:#1a2e23;font-size:14px; }
@@ -188,10 +174,7 @@ select.form-input{cursor:pointer;}
   .pm-obs { margin-top:14px;font-size:12px;color:#555;font-style:italic;padding:9px 13px;background:#f7f9f8;border-left:3px solid #1a6b3a;border-radius:0 5px 5px 0; }
   .psign { position:fixed;bottom:88px;left:0;right:0;text-align:center; }
   .psign .sl { border-top:1px solid #333;width:220px;margin:0 auto 8px; }
-  .psign-nome {
-    font-family:'Playfair Display',Georgia,'Times New Roman',serif;
-    font-size:13px;font-style:italic;color:#1a2e23;
-  }
+  .psign-nome { font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-size:13px;font-style:italic;color:#1a2e23; }
   .psign-crm { font-size:11px;color:#666;margin-top:2px; }
   .pfoot { position:fixed;bottom:32px;left:56px;right:56px;border-top:1px solid #ddd;padding-top:8px;font-size:10px;color:#888;display:flex;justify-content:space-between; }
 }
@@ -680,7 +663,11 @@ function filtrarPacientes(){const q=document.getElementById('search-input').valu
 async function abrirFicha(id){
   showOverlay('Carregando ficha…');
   CURRENT_PAC=PACIENTES.find(p=>p.id===id)||null;if(!CURRENT_PAC){hideOverlay();return;}
-  const[ra,rr,ri]=await Promise.all([SB.from('anamneses').select('*').eq('paciente_id',id).order('data_consulta',{ascending:false}),SB.from('receitas').select('*').eq('paciente_id',id).order('data_receita',{ascending:false}),SB.from('paciente_imagens').select('*').eq('paciente_id',id).order('created_at',{ascending:false})]);
+  const mid=MEDICO_LOGADO?.id||null;
+  const aQ=mid?SB.from('anamneses').select('*').eq('paciente_id',id).eq('medico_id',mid).order('data_consulta',{ascending:false}):SB.from('anamneses').select('*').eq('paciente_id',id).order('data_consulta',{ascending:false});
+  const rQ=mid?SB.from('receitas').select('*').eq('paciente_id',id).eq('medico_id',mid).order('data_receita',{ascending:false}):SB.from('receitas').select('*').eq('paciente_id',id).order('data_receita',{ascending:false});
+  const iQ=mid?SB.from('paciente_imagens').select('*').eq('paciente_id',id).eq('medico_id',mid).order('created_at',{ascending:false}):SB.from('paciente_imagens').select('*').eq('paciente_id',id).order('created_at',{ascending:false});
+  const[ra,rr,ri]=await Promise.all([aQ,rQ,iQ]);
   ANAMNESES=ra.data||[];RECEITAS=rr.data||[];IMAGENS=ri.data||[];
   renderFicha();
   document.getElementById('view-lista').style.display='none';document.getElementById('view-ficha').style.display='block';mudarTab('dados');hideOverlay();
@@ -724,7 +711,7 @@ function renderAnamneses(){
 }
 async function salvarAnamnese(){
   const data=document.getElementById('anam-data').value;if(!data){showToast('Data é obrigatória.','err');return;}
-  const payload={paciente_id:CURRENT_PAC.id,data_consulta:data,medico:document.getElementById('anam-medico').value||null,tipo:document.getElementById('anam-tipo').value||'Consulta',pressao_arterial:document.getElementById('anam-pa').value||null,frequencia_cardiaca:document.getElementById('anam-fc').value||null,temperatura:document.getElementById('anam-temp').value||null,peso_consulta:document.getElementById('anam-peso').value||null,saturacao:document.getElementById('anam-sat').value||null,texto:document.getElementById('anam-texto').value||null};
+  const payload={paciente_id:CURRENT_PAC.id,medico_id:MEDICO_LOGADO?.id||null,data_consulta:data,medico:document.getElementById('anam-medico').value||null,tipo:document.getElementById('anam-tipo').value||'Consulta',pressao_arterial:document.getElementById('anam-pa').value||null,frequencia_cardiaca:document.getElementById('anam-fc').value||null,temperatura:document.getElementById('anam-temp').value||null,peso_consulta:document.getElementById('anam-peso').value||null,saturacao:document.getElementById('anam-sat').value||null,texto:document.getElementById('anam-texto').value||null};
   showOverlay('Salvando…');
   try{const{data:res,error}=await SB.from('anamneses').insert(payload).select().single();if(error)throw error;closeModal('modal-anamnese');ANAMNESES.unshift(res);renderAnamneses();document.getElementById('badge-anam').textContent=ANAMNESES.length;showToast('Consulta registrada!');}catch(e){showToast(e.message,'err');}
   hideOverlay();
@@ -750,7 +737,7 @@ function removeMedRow(id){if(MED_ROWS.length<=1){showToast('Deve ter pelo menos 
 function coletarMeds(){return MED_ROWS.map(id=>{const el=document.getElementById(id);if(!el)return null;return{nome:el.querySelector('[data-field="nome"]').value.trim(),dose:el.querySelector('[data-field="dose"]').value.trim(),posologia:el.querySelector('[data-field="posologia"]').value.trim()};}).filter(m=>m&&m.nome);}
 async function salvarReceita(){
   const meds=coletarMeds();if(!meds.length){showToast('Adicione pelo menos 1 medicamento.','err');return;}
-  const payload={paciente_id:CURRENT_PAC.id,data_receita:document.getElementById('rec-data').value,medico:document.getElementById('rec-medico').value||null,medico_id:MEDICO_LOGADO?.id||null,medicamentos:JSON.stringify(meds),observacoes:document.getElementById('rec-obs').value||null};
+  const payload={paciente_id:CURRENT_PAC.id,medico_id:MEDICO_LOGADO?.id||null,data_receita:document.getElementById('rec-data').value,medico:document.getElementById('rec-medico').value||null,medicamentos:JSON.stringify(meds),observacoes:document.getElementById('rec-obs').value||null};
   showOverlay('Salvando receita…');
   try{const{data,error}=await SB.from('receitas').insert(payload).select().single();if(error)throw error;closeModal('modal-receita');RECEITAS.unshift(data);renderReceitas();document.getElementById('badge-rec').textContent=RECEITAS.length;showToast('Receita salva!');}catch(e){showToast(e.message,'err');}
   hideOverlay();
@@ -795,28 +782,16 @@ function imprimirReceita(){
       <div class="pp-info">${p?.data_nascimento?`Nasc.: ${fmtData(p.data_nascimento)} · ${calcIdade(p.data_nascimento)} anos`:''}${p?.cpf?' &nbsp;·&nbsp; CPF: '+p.cpf:''}</div>
     </div>
     <div class="pm-titulo">Prescrição — ${fmtData(r.data_receita)}</div>
-    ${meds.map((m,i)=>`
-      <div class="pm-item">
-        <span class="pm-num">${i+1}.</span>
-        <span class="pm-med">${m.nome}${m.dose?' '+m.dose:''}</span>
-        ${m.posologia?`<span class="pm-pos">— ${m.posologia}</span>`:''}
-      </div>`).join('')}
+    ${meds.map((m,i)=>`<div class="pm-item"><span class="pm-num">${i+1}.</span><span class="pm-med">${m.nome}${m.dose?' '+m.dose:''}</span>${m.posologia?`<span class="pm-pos">— ${m.posologia}</span>`:''}</div>`).join('')}
     ${r.observacoes?`<div class="pm-obs">${r.observacoes}</div>`:''}
-    <div class="psign">
-      <div class="sl"></div>
-      <div class="psign-nome">${nomeMed}</div>
-      ${med?.crm?`<div class="psign-crm">CRM: ${med.crm}</div>`:''}
-    </div>
-    <div class="pfoot">
-      <span>${med?.endereco||''}</span>
-      <span>${med?.telefone||''}</span>
-    </div>`;
+    <div class="psign"><div class="sl"></div><div class="psign-nome">${nomeMed}</div>${med?.crm?`<div class="psign-crm">CRM: ${med.crm}</div>`:''}</div>
+    <div class="pfoot"><span>${med?.endereco||''}</span><span>${med?.telefone||''}</span></div>`;
   pa.style.display='block';window.print();pa.style.display='none';
 }
 
 async function uploadImagens(files){
   if(!files||!files.length||!CURRENT_PAC)return;showOverlay('Enviando imagens…');let ok=0,err=0;
-  for(const file of files){try{const ext=file.name.split('.').pop();const path=`${CURRENT_PAC.id}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;const{error:upErr}=await SB.storage.from(BUCKET).upload(path,file,{upsert:false});if(upErr)throw upErr;const{data:urlData}=SB.storage.from(BUCKET).getPublicUrl(path);const{error:dbErr}=await SB.from('paciente_imagens').insert({paciente_id:CURRENT_PAC.id,nome:file.name,url:urlData.publicUrl,path,tipo:file.type,tamanho:file.size});if(dbErr)throw dbErr;ok++;}catch(e){err++;console.error(e);}}
+  for(const file of files){try{const ext=file.name.split('.').pop();const path=`${CURRENT_PAC.id}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;const{error:upErr}=await SB.storage.from(BUCKET).upload(path,file,{upsert:false});if(upErr)throw upErr;const{data:urlData}=SB.storage.from(BUCKET).getPublicUrl(path);const{error:dbErr}=await SB.from('paciente_imagens').insert({paciente_id:CURRENT_PAC.id,medico_id:MEDICO_LOGADO?.id||null,nome:file.name,url:urlData.publicUrl,path,tipo:file.type,tamanho:file.size});if(dbErr)throw dbErr;ok++;}catch(e){err++;console.error(e);}}
   const{data:ri}=await SB.from('paciente_imagens').select('*').eq('paciente_id',CURRENT_PAC.id).order('created_at',{ascending:false});
   IMAGENS=ri||[];renderImagens();document.getElementById('badge-imgs').textContent=IMAGENS.length;hideOverlay();
   if(ok)showToast(`${ok} imagem(ns) enviada(s)!`);if(err)showToast(`${err} erro(s) no upload.`,'err');
@@ -838,7 +813,16 @@ function closeLightbox(){document.getElementById('lightbox').classList.remove('s
 
 async function excluirPaciente(){
   if(!CURRENT_PAC)return;showOverlay('Excluindo…');
-  try{for(const img of IMAGENS){if(img.path)await SB.storage.from(BUCKET).remove([img.path]);}await SB.from('paciente_imagens').delete().eq('paciente_id',CURRENT_PAC.id);await SB.from('anamneses').delete().eq('paciente_id',CURRENT_PAC.id);await SB.from('receitas').delete().eq('paciente_id',CURRENT_PAC.id);const{error}=await SB.from('pacientes').delete().eq('id',CURRENT_PAC.id);if(error)throw error;closeModal('modal-excluir');showToast('Paciente excluído.');await carregarPacientes();voltarLista();}catch(e){showToast(e.message,'err');}
+  try{
+    const mid=MEDICO_LOGADO?.id||null;
+    // Remove imagens do storage do médico logado
+    for(const img of IMAGENS){if(img.path)await SB.storage.from(BUCKET).remove([img.path]);}
+    if(mid){
+      await SB.from('paciente_imagens').delete().eq('paciente_id',CURRENT_PAC.id).eq('medico_id',mid);
+      await SB.from('anamneses').delete().eq('paciente_id',CURRENT_PAC.id).eq('medico_id',mid);
+      await SB.from('receitas').delete().eq('paciente_id',CURRENT_PAC.id).eq('medico_id',mid);
+    }
+    const{error}=await SB.from('pacientes').delete().eq('id',CURRENT_PAC.id);if(error)throw error;closeModal('modal-excluir');showToast('Paciente excluído.');await carregarPacientes();voltarLista();}catch(e){showToast(e.message,'err');}
   hideOverlay();
 }
 function imprimirFicha(){window.print();}
