@@ -528,7 +528,7 @@ select.form-input{cursor:pointer;}
       <button class="modal-close" onclick="closeModal('modal-medico')">✕</button>
     </div>
     <div class="modal-body">
-      <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;background:var(--off-white);padding:10px 12px;border-radius:8px">O e-mail e senha criam o login do médico. As demais informações aparecem no cabeçalho e rodapé das receitas impressas.</p>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;background:var(--off-white);padding:10px 12px;border-radius:8px">Isto cadastra os dados do médico (usados no cabeçalho/rodapé das receitas). O <strong>login</strong> é criado à parte no painel Supabase: <em>Authentication &gt; Users &gt; Add user</em>, usando o mesmo e-mail.</p>
       <div class="form-grid form-grid-2">
         <div class="form-group full"><div class="form-label">Nome completo *</div><input class="form-input" id="med-nome" placeholder="Dr(a). Nome Sobrenome"></div>
         <div class="form-group"><div class="form-label">CRM *</div><input class="form-input" id="med-crm" placeholder="CRM/RS 00000"></div>
@@ -536,7 +536,7 @@ select.form-input{cursor:pointer;}
         <div class="form-group full"><div class="form-label">Endereço comercial</div><input class="form-input" id="med-endereco" placeholder="Rua, nº, sala, bairro, cidade/UF"></div>
         <div class="form-group"><div class="form-label">Telefone comercial</div><input class="form-input" id="med-tel" placeholder="(00) 90000-0000" maxlength="16" oninput="maskTel(this)"></div>
         <div class="form-group"><div class="form-label">E-mail (login) *</div><input class="form-input" id="med-email" type="email" placeholder="medico@email.com"></div>
-        <div class="form-group"><div class="form-label" id="med-pass-label">Senha (login) *</div><input class="form-input" id="med-pass" type="password" placeholder="Mínimo 6 caracteres"></div>
+        <div class="form-group" style="display:none"><div class="form-label" id="med-pass-label">Senha (login)</div><input class="form-input" id="med-pass" type="password" placeholder="Mínimo 6 caracteres"></div>
       </div>
     </div>
     <div class="modal-footer">
@@ -590,9 +590,11 @@ window.addEventListener('DOMContentLoaded',()=>{
   if(z){z.addEventListener('dragover',e=>{e.preventDefault();z.style.borderColor='var(--green-mid)';});z.addEventListener('dragleave',()=>z.style.borderColor='');z.addEventListener('drop',e=>{e.preventDefault();z.style.borderColor='';uploadImagens(e.dataTransfer.files);});}
 });
 
-const _URL='https://vmfygvgjugyvqbnrelzh.supabase.co';
-const _ANON='sb_publishable_YaSoGdeayV1c7Mhn6hzBPA_kT06Osvn';
-const _SVC='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtZnlndmdqdWd5dnFibnJlbHpoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODg3NDA2MCwiZXhwIjoyMDk0NDUwMDYwfQ.BIUd3KapD_ynXPh7PZ2f8bj56OvjX79Fqs-xLiH22_Y';
+// Projeto novo Supabase — Project Settings > API
+const _URL='https://rniastevmjmlaenobsaf.supabase.co';
+const _ANON='sb_publishable_85qPLokgtBG3ZONgyCnpjw_AqDMNpVd';
+// service_role NÃO fica mais no client (esta página é pública no GitHub Pages).
+// Logins de médicos são criados no painel: Authentication > Users > Add user.
 
 async function doLogin(){
   const email=document.getElementById('login-email').value.trim();
@@ -853,13 +855,12 @@ async function editarMedico(id){const{data,error}=await SB.from('medicos').selec
 async function salvarMedico(){
   const nome=document.getElementById('med-nome').value.trim();const crm=document.getElementById('med-crm').value.trim();const email=document.getElementById('med-email').value.trim();const pass=document.getElementById('med-pass').value;
   if(!nome||!crm||!email){showToast('Nome, CRM e e-mail são obrigatórios.','err');return;}
-  if(!EDIT_MED_ID&&!pass){showToast('Senha é obrigatória para novo médico.','err');return;}
   showOverlay('Salvando médico…');
   try{
-    if(!EDIT_MED_ID&&pass){const sbAdmin=supabase.createClient(_URL,_SVC);const{error:authErr}=await sbAdmin.auth.admin.createUser({email,password:pass,email_confirm:true});if(authErr&&!authErr.message.toLowerCase().includes('already')&&!authErr.message.toLowerCase().includes('exists'))throw authErr;}
+    // O login (auth user) é criado no painel Supabase: Authentication > Users > Add user (mesmo e-mail).
     const payload={nome,crm,especialidade:document.getElementById('med-especialidade').value||null,endereco:document.getElementById('med-endereco').value||null,telefone:document.getElementById('med-tel').value||null,email};
     let res;if(EDIT_MED_ID)res=await SB.from('medicos').update(payload).eq('id',EDIT_MED_ID).select().single();else res=await SB.from('medicos').insert(payload).select().single();
-    if(res.error)throw res.error;closeModal('modal-medico');showToast(EDIT_MED_ID?'Médico atualizado!':'Médico cadastrado!');await carregarMedicos();
+    if(res.error)throw res.error;closeModal('modal-medico');showToast(EDIT_MED_ID?'Médico atualizado!':'Médico salvo! Agora crie o login em Authentication > Users com este e-mail.','inf');await carregarMedicos();
   }catch(e){showToast(e.message,'err');}
   hideOverlay();
 }
